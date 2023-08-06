@@ -2,6 +2,6 @@ package utils
 
 import "fmt"
 
-func HelloWorld() string {
+func HelloWorld() {
 	fmt.Println("Hello World from niquefa/gotools!!!")
 }
