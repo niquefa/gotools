@@ -32,6 +32,25 @@ func TestSum(t *testing.T) {
 	}
 }
 
+func TestReverseInterfaceMore(t *testing.T) {
+	tests := []struct {
+		input []interface{}
+		want  []interface{}
+	}{
+		{[]interface{}{1}, []interface{}{1}},
+		{[]interface{}{1, 2}, []interface{}{2, 1}},
+		{[]interface{}{1, 2, 3, 4, 5, 6, 7, 8, 9}, []interface{}{9, 8, 7, 6, 5, 4, 3, 2, 1}},
+		{[]interface{}{"a", 1, "b", 2}, []interface{}{2, "b", 1, "a"}},
+	}
+
+	for _, test := range tests {
+		ReverseInterface(test.input)
+		if !reflect.DeepEqual(test.input, test.want) {
+			t.Errorf("ReverseInterface(%v) got %v; want %v", test.input, test.input, test.want)
+		}
+	}
+}
+
 func TestMin(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -119,6 +138,34 @@ func TestCountRunes(t *testing.T) {
 		got := RuneFrequency(test.input)
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("CountRunes(%v) = %v; want %v", test.input, got, test.want)
+		}
+	}
+}
+
+func TestNextPermutation(t *testing.T) {
+	tests := []struct {
+		input []int
+		want  []int
+		ok    bool
+	}{
+		{[]int{1}, []int{1}, false},
+		{[]int{2, 1}, []int{2, 1}, false},
+		{[]int{1, 2}, []int{2, 1}, true},
+		{[]int{1, 2, 3, 4, 5}, []int{1, 2, 3, 5, 4}, true},
+		{[]int{5, 4, 3, 2, 1}, []int{5, 4, 3, 2, 1}, false},
+		{[]int{1, 2, 3}, []int{1, 3, 2}, true},
+		{[]int{3, 2, 1}, []int{3, 2, 1}, false},
+		{[]int{1, 1, 5}, []int{1, 5, 1}, true},
+		{[]int{3, 3, 3, 3}, []int{3, 3, 3, 3}, false},
+		{[]int{4, 3, 2, 1}, []int{4, 3, 2, 1}, false},
+	}
+
+	for _, test := range tests {
+		originalInput := make([]int, len(test.input))
+		copy(originalInput, test.input)
+		ok := NextPermutation(test.input)
+		if ok != test.ok || !reflect.DeepEqual(test.input, test.want) {
+			t.Errorf("nextPermutation(%v) got %v; want %v", originalInput, test.input, test.want)
 		}
 	}
 }

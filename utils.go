@@ -142,3 +142,40 @@ func RuneFrequency(s string) map[rune]int {
 	}
 	return counts
 }
+
+// ReverseInterface reverses a slice of interface{} in place.
+func ReverseInterface(arr []interface{}) {
+	n := len(arr)
+	for i := 0; i < n/2; i++ {
+		arr[i], arr[n-i-1] = arr[n-i-1], arr[i]
+	}
+}
+
+func NextPermutation(a []int) bool {
+	n := len(a)
+	i := n - 2
+	for i >= 0 && a[i] >= a[i+1] {
+		i--
+	}
+	if i < 0 {
+		return false
+	}
+	j := n - 1
+	for j >= 0 && a[j] <= a[i] {
+		j--
+	}
+	a[i], a[j] = a[j], a[i]
+
+	reverse(a[i+1:])
+
+	return true
+}
+
+func reverse(a []int) {
+	i, j := 0, len(a)-1
+	for i < j {
+		a[i], a[j] = a[j], a[i]
+		i++
+		j--
+	}
+}
