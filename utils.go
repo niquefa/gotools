@@ -121,11 +121,11 @@ func MaxFloat64(values ...float64) (float64, error) {
 	return max, nil
 }
 
-// CountElements takes a slice of interface{} and returns a map where the keys
+// Frequency takes a slice of int and returns a map where the keys
 // are the unique elements from the slice, and the values are the counts of those
 // elements. It checks that all elements in the slice are of the same type and
 // returns an error if they are not.
-func Frequency(elements []interface{}) (map[interface{}]int, error) {
+func IntsFrequency(elements []int) (map[int]int, error) {
 	if len(elements) == 0 {
 		return nil, errors.New("slice is empty")
 	}
@@ -136,7 +136,7 @@ func Frequency(elements []interface{}) (map[interface{}]int, error) {
 		}
 	}
 
-	counts := make(map[interface{}]int)
+	counts := make(map[int]int)
 	for _, elem := range elements {
 		counts[elem]++
 	}
@@ -154,8 +154,8 @@ func RuneFrequency(s string) map[rune]int {
 	return counts
 }
 
-// ReverseInterface reverses a slice of interface{} in place.
-func ReverseInterface(arr []interface{}) {
+// ReverseInterface reverses a slice of int in place.
+func ReverseIntSlice(arr []int) {
 	n := len(arr)
 	for i := 0; i < n/2; i++ {
 		arr[i], arr[n-i-1] = arr[n-i-1], arr[i]

@@ -87,19 +87,18 @@ func TestSumFloat64(t *testing.T) {
 	}
 }
 
-func TestReverseInterfaceMore(t *testing.T) {
+func TestReverseIntSlice(t *testing.T) {
 	tests := []struct {
-		input []interface{}
-		want  []interface{}
+		input []int
+		want  []int
 	}{
-		{[]interface{}{1}, []interface{}{1}},
-		{[]interface{}{1, 2}, []interface{}{2, 1}},
-		{[]interface{}{1, 2, 3, 4, 5, 6, 7, 8, 9}, []interface{}{9, 8, 7, 6, 5, 4, 3, 2, 1}},
-		{[]interface{}{"a", 1, "b", 2}, []interface{}{2, "b", 1, "a"}},
+		{[]int{1}, []int{1}},
+		{[]int{1, 2}, []int{2, 1}},
+		{[]int{1, 2, 3, 4, 5, 6, 7, 8, 9}, []int{9, 8, 7, 6, 5, 4, 3, 2, 1}},
 	}
 
 	for _, test := range tests {
-		ReverseInterface(test.input)
+		ReverseIntSlice(test.input)
 		if !reflect.DeepEqual(test.input, test.want) {
 			t.Errorf("ReverseInterface(%v) got %v; want %v", test.input, test.input, test.want)
 		}
@@ -274,19 +273,20 @@ func TestMaxFloat64(t *testing.T) {
 	}
 }
 
-func TestFrequency(t *testing.T) {
+func TestIntsFrequency(t *testing.T) {
 	tests := []struct {
-		input []interface{}
-		want  map[interface{}]int
+		input []int
+		want  map[int]int
 		err   bool
 	}{
-		{[]interface{}{1, 2, 3, 1, 2, 3, 3}, map[interface{}]int{1: 2, 2: 2, 3: 3}, false},
-		{[]interface{}{"apple", "banana", "apple"}, map[interface{}]int{"apple": 2, "banana": 1}, false},
-		{[]interface{}{1, "apple"}, nil, true},
+		{[]int{1, 2, 3, 1, 2, 3, 3}, map[int]int{1: 2, 2: 2, 3: 3}, false},
+		{nil, nil, true},
+		{[]int{}, nil, true},
+		{[]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, map[int]int{1: 10}, false},
 	}
 
 	for _, test := range tests {
-		got, err := Frequency(test.input)
+		got, err := IntsFrequency(test.input)
 		if (err != nil) != test.err || !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Frequency(%v) = %v, %v; want %v, %v", test.input, got, err, test.want, test.err)
 		}
