@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>gotools: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/niquefa/gotools/utils.go (86.7%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package utils
+
+import (
+        "errors"
+        "fmt"
+        "reflect"
+)
+
+func HelloWorld() <span class="cov0" title="0">{
+        fmt.Println("Hello World from niquefa/gotools!!!")
+}</span>
+
+// Sum takes a variable number of interface{} arguments and returns their sum.
+// All arguments must be of the same integer or floating-point type; otherwise, an error is returned.
+// If the arguments are floating-point, the return value will also be floating-point.
+// If the arguments are integers, the return value will also be an integer.
+// If no arguments are provided, an error is returned.
+func Sum(a ...interface{}) (interface{}, error) <span class="cov8" title="1">{
+        if len(a) == 0 </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("no arguments provided")
+        }</span>
+
+        <span class="cov8" title="1">var sumType reflect.Type
+        var sumInt int64
+        var sumFloat float64
+
+        for _, v := range a </span><span class="cov8" title="1">{
+                valueType := reflect.TypeOf(v)
+                if sumType == nil </span><span class="cov8" title="1">{
+                        sumType = valueType
+                }</span> else<span class="cov8" title="1"> if sumType != valueType </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("all elements must be of the same type")
+                }</span>
+
+                <span class="cov8" title="1">switch value := v.(type) </span>{
+                case int, int8, int16, int32, int64:<span class="cov8" title="1">
+                        intValue := reflect.ValueOf(value).Convert(reflect.TypeOf(int64(0))).Int()
+                        sumInt += intValue</span>
+                case uint, uint8, uint16, uint32, uint64:<span class="cov0" title="0">
+                        uintValue := reflect.ValueOf(value).Convert(reflect.TypeOf(uint64(0))).Uint()
+                        sumInt += int64(uintValue)</span>
+                case float32, float64:<span class="cov8" title="1">
+                        floatValue := reflect.ValueOf(value).Convert(reflect.TypeOf(float64(0))).Float()
+                        sumFloat += floatValue</span>
+                default:<span class="cov0" title="0">
+                        return nil, fmt.Errorf("unsupported type: %T", v)</span>
+                }
+        }
+
+        <span class="cov8" title="1">if sumType.Kind() == reflect.Float32 || sumType.Kind() == reflect.Float64 </span><span class="cov8" title="1">{
+                return sumFloat, nil
+        }</span>
+
+        <span class="cov8" title="1">return sumInt, nil</span>
+}
+
+// Min takes a slice of interface{} arguments and returns the minimum value.
+// All arguments must be of the same integer or floating-point type; otherwise, an error is returned.
+func Min(a ...interface{}) (interface{}, error) <span class="cov8" title="1">{
+        if len(a) == 0 </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("no arguments provided")
+        }</span>
+
+        <span class="cov8" title="1">minValue := a[0]
+        for _, v := range a[1:] </span><span class="cov8" title="1">{
+                if reflect.TypeOf(v) != reflect.TypeOf(minValue) </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("all elements must be of the same type")
+                }</span>
+                <span class="cov8" title="1">switch minValue.(type) </span>{
+                case int, int8, int16, int32, int64:<span class="cov8" title="1">
+                        if v.(int) &lt; minValue.(int) </span><span class="cov8" title="1">{
+                                minValue = v
+                        }</span>
+                case float32, float64:<span class="cov8" title="1">
+                        if v.(float64) &lt; minValue.(float64) </span><span class="cov8" title="1">{
+                                minValue = v
+                        }</span>
+                default:<span class="cov0" title="0">
+                        return nil, fmt.Errorf("unsupported type: %T", v)</span>
+                }
+        }
+        <span class="cov8" title="1">return minValue, nil</span>
+}
+
+// Max takes a slice of interface{} arguments and returns the maximum value.
+// All arguments must be of the same integer or floating-point type; otherwise, an error is returned.
+func Max(a ...interface{}) (interface{}, error) <span class="cov8" title="1">{
+        if len(a) == 0 </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("no arguments provided")
+        }</span>
+
+        <span class="cov8" title="1">maxValue := a[0]
+        for _, v := range a[1:] </span><span class="cov8" title="1">{
+                if reflect.TypeOf(v) != reflect.TypeOf(maxValue) </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("all elements must be of the same type")
+                }</span>
+                <span class="cov8" title="1">switch maxValue.(type) </span>{
+                case int, int8, int16, int32, int64:<span class="cov8" title="1">
+                        if v.(int) &gt; maxValue.(int) </span><span class="cov8" title="1">{
+                                maxValue = v
+                        }</span>
+                case float32, float64:<span class="cov8" title="1">
+                        if v.(float64) &gt; maxValue.(float64) </span><span class="cov8" title="1">{
+                                maxValue = v
+                        }</span>
+                default:<span class="cov0" title="0">
+                        return nil, fmt.Errorf("unsupported type: %T", v)</span>
+                }
+        }
+        <span class="cov8" title="1">return maxValue, nil</span>
+}
+
+// CountElements takes a slice of interface{} and returns a map where the keys
+// are the unique elements from the slice, and the values are the counts of those
+// elements. It checks that all elements in the slice are of the same type and
+// returns an error if they are not.
+func Frequency(elements []interface{}) (map[interface{}]int, error) <span class="cov8" title="1">{
+        if len(elements) == 0 </span><span class="cov0" title="0">{
+                return nil, errors.New("slice is empty")
+        }</span>
+        <span class="cov8" title="1">firstType := reflect.TypeOf(elements[0])
+        for _, elem := range elements[1:] </span><span class="cov8" title="1">{
+                if reflect.TypeOf(elem) != firstType </span><span class="cov8" title="1">{
+                        return nil, errors.New("all elements must be of the same type")
+                }</span>
+        }
+
+        <span class="cov8" title="1">counts := make(map[interface{}]int)
+        for _, elem := range elements </span><span class="cov8" title="1">{
+                counts[elem]++
+        }</span>
+
+        <span class="cov8" title="1">return counts, nil</span>
+}
+
+// RuneFrequency takes a string and returns a map where the keys are the unique runes from the string,
+// and the values are the counts of those runes.
+func RuneFrequency(s string) map[rune]int <span class="cov8" title="1">{
+        counts := make(map[rune]int)
+        for _, r := range s </span><span class="cov8" title="1">{
+                counts[r]++
+        }</span>
+        <span class="cov8" title="1">return counts</span>
+}
+
+// ReverseInterface reverses a slice of interface{} in place.
+func ReverseInterface(arr []interface{}) <span class="cov8" title="1">{
+        n := len(arr)
+        for i := 0; i &lt; n/2; i++ </span><span class="cov8" title="1">{
+                arr[i], arr[n-i-1] = arr[n-i-1], arr[i]
+        }</span>
+}
+
+func NextPermutation(a []int) bool <span class="cov8" title="1">{
+        n := len(a)
+        i := n - 2
+        for i &gt;= 0 &amp;&amp; a[i] &gt;= a[i+1] </span><span class="cov8" title="1">{
+                i--
+        }</span>
+        <span class="cov8" title="1">if i &lt; 0 </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">j := n - 1
+        for j &gt;= 0 &amp;&amp; a[j] &lt;= a[i] </span><span class="cov0" title="0">{
+                j--
+        }</span>
+        <span class="cov8" title="1">a[i], a[j] = a[j], a[i]
+
+        reverse(a[i+1:])
+
+        return true</span>
+}
+
+func reverse(a []int) <span class="cov8" title="1">{
+        i, j := 0, len(a)-1
+        for i &lt; j </span><span class="cov0" title="0">{
+                a[i], a[j] = a[j], a[i]
+                i++
+                j--
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

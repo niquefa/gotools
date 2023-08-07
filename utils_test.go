@@ -5,28 +5,83 @@ import (
 	"testing"
 )
 
-func TestSum(t *testing.T) {
+func TestSumInt(t *testing.T) {
 	tests := []struct {
 		name    string
-		args    []interface{}
-		want    interface{}
+		args    []int
+		want    int
 		wantErr bool
 	}{
-		{"All integers", []interface{}{int32(1), int32(2), int32(3), int32(4)}, int64(10), false},
-		{"All floats", []interface{}{float64(1.1), float64(2.2), float64(3.3), float64(4.4)}, float64(11), false},
-		{"Mixed types", []interface{}{int32(1), float64(2.2), int32(3), float64(4.4)}, nil, true},
-		{"Empty input", []interface{}{}, nil, true},
+		{"Base case", []int{3, 1, 4, 2}, 10, false},
+		{"Empty input", []int{}, 0, true},
+		{"One element", []int{3}, 3, false},
+		{"Negative Values", []int{-3, 0, -10}, -13, false},
+		{"Big Values", []int{1 << 10, 1 << 9, 0}, 1536, false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Sum(tt.args...)
+			got, err := SumInt(tt.args...)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Sum() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SumInt() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("Sum() = %v, want %v", got, tt.want)
+				t.Errorf("SumInt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSumInt64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []int64
+		want    int64
+		wantErr bool
+	}{
+		{"Base case", []int64{3, 1, 4, 2}, 10, false},
+		{"Empty input", []int64{}, 0, true},
+		{"One element", []int64{3}, 3, false},
+		{"Negative Values", []int64{-3, 0, -10}, -13, false},
+		{"Big Values", []int64{1 << 10, 1 << 9, 0}, 1536, false}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := SumInt64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SumInt64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("SumInt64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSumFloat64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []float64
+		want    float64
+		wantErr bool
+	}{
+		{"Base case", []float64{3, 1, 4, 2}, 10, false},
+		{"Empty input", []float64{}, 0, true},
+		{"One element", []float64{3}, 3, false},
+		{"Negative Values", []float64{-3, 0, -10}, -13, false},
+		{"Big Values", []float64{1 << 10, 1 << 9, 0}, 1536, false}}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := SumFloat64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SumFloat64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("SumFloat64() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -51,61 +106,175 @@ func TestReverseInterfaceMore(t *testing.T) {
 	}
 }
 
-func TestMin(t *testing.T) {
+func TestMinInt(t *testing.T) {
 	tests := []struct {
 		name    string
-		args    []interface{}
-		want    interface{}
+		args    []int
+		want    int
 		wantErr bool
 	}{
-		{"All integers", []interface{}{3, 1, 4, 2}, int(1), false},
-		{"All floats", []interface{}{3.3, 1.1, 4.4, 2.2}, float64(1.1), false},
-		{"Empty input", []interface{}{}, nil, true},
-		{"Mixed types", []interface{}{3, 1.1}, nil, true},
+		{"Base case", []int{3, 1, 4, 2}, int(1), false},
+		{"Empty input", []int{}, 0, true},
+		{"One element types", []int{3}, 3, false},
+		{"Negative Values", []int{-3, 0, -10}, -10, false},
+		{"Big Values", []int{1 << 10, 1 << 9, 0}, 0, false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Min(tt.args...)
+			got, err := MinInt(tt.args...)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Min() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MinInt() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("Min() = %v, want %v", got, tt.want)
+				t.Errorf("MinInt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestMax(t *testing.T) {
+func TestMaxInt(t *testing.T) {
 	tests := []struct {
 		name    string
-		args    []interface{}
-		want    interface{}
+		args    []int
+		want    int
 		wantErr bool
 	}{
-		{"All integers", []interface{}{3, 1, 4, 2}, int(4), false},
-		{"All floats", []interface{}{3.3, 1.1, 4.4, 2.2}, float64(4.4), false},
-		{"Empty input", []interface{}{}, nil, true},
-		{"Mixed types", []interface{}{3, 1.1}, nil, true},
+		{"Base case", []int{3, 1, 4, 2}, int(4), false},
+		{"Empty input", []int{}, 0, true},
+		{"One element types", []int{3}, 3, false},
+		{"Negative Values", []int{-3, 0, -10}, 0, false},
+		{"Big Values", []int{1 << 10, 1 << 9, 0}, 1 << 10, false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Max(tt.args...)
+			got, err := MaxInt(tt.args...)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Max() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MaxInt() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("Max() = %v, want %v", got, tt.want)
+				t.Errorf("MaxInt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestCountElements(t *testing.T) {
+func TestMinInt64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []int64
+		want    int64
+		wantErr bool
+	}{
+		{"Base case", []int64{3, 1, 4, 2}, int64(1), false},
+		{"Empty input", []int64{}, 0, true},
+		{"One element types", []int64{3}, 3, false},
+		{"Negative Values", []int64{-3, 0, -10}, -10, false},
+		{"Big Values", []int64{1 << 10, 1 << 9, 0}, 0, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := MinInt64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MinInt64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("MinInt64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMaxInt64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []int64
+		want    int64
+		wantErr bool
+	}{
+		{"Base case", []int64{3, 1, 4, 2}, int64(4), false},
+		{"Empty input", []int64{}, 0, true},
+		{"One element types", []int64{3}, 3, false},
+		{"Negative Values", []int64{-3, 0, -10}, 0, false},
+		{"Big Values", []int64{1 << 10, 1 << 9, 0}, 1 << 10, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := MaxInt64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MaxInt64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("MaxInt64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMinFloat64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []float64
+		want    float64
+		wantErr bool
+	}{
+		{"Base case", []float64{3, 1, 4, 2}, float64(1), false},
+		{"Empty input", []float64{}, 0, true},
+		{"One element types", []float64{3}, 3, false},
+		{"Negative Values", []float64{-3, 0, -10}, -10, false},
+		{"Big Values", []float64{1 << 10, 1 << 9, 0}, 0, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := MinFloat64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MinFloat64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("MinFloat64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMaxFloat64(t *testing.T) {
+	tests := []struct {
+		name    string
+		args    []float64
+		want    float64
+		wantErr bool
+	}{
+		{"Base case", []float64{3, 1, 4, 2}, float64(4), false},
+		{"Empty input", []float64{}, 0, true},
+		{"One element types", []float64{3}, 3, false},
+		{"Negative Values", []float64{-3, 0, -10}, 0, false},
+		{"Big Values", []float64{1 << 10, 1 << 9, 0}, 1 << 10, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := MaxFloat64(tt.args...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("MaxFloat64() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("MaxFloat64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFrequency(t *testing.T) {
 	tests := []struct {
 		input []interface{}
 		want  map[interface{}]int
@@ -119,12 +288,12 @@ func TestCountElements(t *testing.T) {
 	for _, test := range tests {
 		got, err := Frequency(test.input)
 		if (err != nil) != test.err || !reflect.DeepEqual(got, test.want) {
-			t.Errorf("CountElements(%v) = %v, %v; want %v, %v", test.input, got, err, test.want, test.err)
+			t.Errorf("Frequency(%v) = %v, %v; want %v, %v", test.input, got, err, test.want, test.err)
 		}
 	}
 }
 
-func TestCountRunes(t *testing.T) {
+func TestRuneFrequency(t *testing.T) {
 	tests := []struct {
 		input string
 		want  map[rune]int
@@ -137,7 +306,7 @@ func TestCountRunes(t *testing.T) {
 	for _, test := range tests {
 		got := RuneFrequency(test.input)
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("CountRunes(%v) = %v; want %v", test.input, got, test.want)
+			t.Errorf("RuneFrequency(%v) = %v; want %v", test.input, got, test.want)
 		}
 	}
 }
