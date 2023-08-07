@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 )
@@ -107,4 +108,37 @@ func Max(a ...interface{}) (interface{}, error) {
 		}
 	}
 	return maxValue, nil
+}
+
+// CountElements takes a slice of interface{} and returns a map where the keys
+// are the unique elements from the slice, and the values are the counts of those
+// elements. It checks that all elements in the slice are of the same type and
+// returns an error if they are not.
+func Frequency(elements []interface{}) (map[interface{}]int, error) {
+	if len(elements) == 0 {
+		return nil, errors.New("slice is empty")
+	}
+	firstType := reflect.TypeOf(elements[0])
+	for _, elem := range elements[1:] {
+		if reflect.TypeOf(elem) != firstType {
+			return nil, errors.New("all elements must be of the same type")
+		}
+	}
+
+	counts := make(map[interface{}]int)
+	for _, elem := range elements {
+		counts[elem]++
+	}
+
+	return counts, nil
+}
+
+// RuneFrequency takes a string and returns a map where the keys are the unique runes from the string,
+// and the values are the counts of those runes.
+func RuneFrequency(s string) map[rune]int {
+	counts := make(map[rune]int)
+	for _, r := range s {
+		counts[r]++
+	}
+	return counts
 }
